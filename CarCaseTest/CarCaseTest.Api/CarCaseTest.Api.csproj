@@ -19,7 +19,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CarCaseTest.Business\CarCaseTest.Business.csproj" />
-    <ProjectReference Include="..\CarCaseTest.Consumer\CarCaseTest.Consumer.csproj" />
     <ProjectReference Include="..\CarCaseTest.Queue\CarCaseTest.Queue.csproj" />
   </ItemGroup>
 

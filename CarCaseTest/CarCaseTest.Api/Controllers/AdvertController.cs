@@ -1,6 +1,8 @@
 ﻿using CarCaseTest.Business.Interfaces;
 using CarCaseTest.Domain.Models.Adverts;
 using CarCaseTest.Domain.Models.AdvertVisits;
+using CarCaseTest.Queue.Events;
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Net;
@@ -11,9 +13,12 @@ namespace CarCaseTest.Api.Controllers
     public class AdvertController : BaseController
     {
         private readonly IAdvertService _advertService;
-        public AdvertController(IAdvertService advertService)
+        private readonly IBus _bus;
+
+        public AdvertController(IAdvertService advertService, IBus bus)
         {
             _advertService = advertService;
+            _bus = bus;
         }
 
         [HttpGet("all")]
@@ -41,8 +46,8 @@ namespace CarCaseTest.Api.Controllers
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         public async Task<IActionResult> Visit(int advertId)
         {
-            var message = new AddAdvertVisitModel { AdvertId = advertId, IPAddress = Request.HttpContext.Connection.RemoteIpAddress.ToString(), VisitDate = DateTime.Now };
-            //await _producer.SendMessage(message, QueueConstants.AdvertVisitQueue);
+            var message = new AdvertVisitMessage { AdvertId = advertId, IPAddress = Request.HttpContext.Connection.RemoteIpAddress.ToString(), VisitDate = DateTime.Now };
+            _ = Task.Run(() => _bus.Publish(message));
             return Created("advert/visit", "Visit created");
         }
     }

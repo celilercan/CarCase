@@ -1,5 +1,9 @@
+using CarCaseTest.Queue.Consumers;
+using CarCaseTest.Queue.Services;
+using MassTransit;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Sinks.Elasticsearch;
@@ -34,6 +38,30 @@ namespace CarCaseTest.Api
 
 		public static IHostBuilder CreateHostBuilder(string[] args) =>
 				Host.CreateDefaultBuilder(args)
+					.ConfigureServices((hostContext, services) =>
+                    {
+						var config = hostContext.Configuration.GetSection("RabbitMQ");
+						//services.RegisterModelServices();
+						services.AddMassTransit(x => {
+							x.AddConsumers(typeof(AdvertVisitConsumer).Assembly);
+							x.UsingRabbitMq((context, cfg) =>
+							{
+								cfg.Host(config["HostName"], x => 
+								{
+									x.Username(config["UserName"]);
+									x.Password(config["Password"]);
+								});
+								cfg.UseMessageRetry(r => r.Interval(3, 1000));
+								cfg.Durable = true;
+								cfg.AutoDelete = false;
+								cfg.ReceiveEndpoint(config["QueueName"], e =>
+								{
+									e.ConfigureConsumer<AdvertVisitConsumer>(context);
+								});
+							});
+						});
+						services.AddHostedService<MassTransitService>();
+					})
 					.ConfigureWebHostDefaults(webBuilder =>
 					{
 						webBuilder.UseStartup<Startup>();

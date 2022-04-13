@@ -10,10 +10,6 @@ using CarCaseTest.Infrastructure.Repositories;
 using CarCaseTest.Business.Interfaces;
 using CarCaseTest.Business.Services;
 using CarCaseTest.Business.Search;
-using CarCaseTest.Queue;
-using System.Net;
-using Microsoft.AspNetCore.Http;
-using CarCaseTest.Consumer.Consumers;
 
 namespace CarCaseTest.Api
 {
@@ -35,7 +31,6 @@ namespace CarCaseTest.Api
             #region Dependencies
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<ElasticSearchManager>();
-            services.AddScoped<Producer>();
 
             services.AddTransient<IAdvertRepository, AdvertRepository>();
             services.AddTransient<IAdvertVisitRepository, AdvertVisitRepository>();

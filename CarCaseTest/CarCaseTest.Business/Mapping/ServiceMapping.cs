@@ -4,6 +4,7 @@ using CarCaseTest.Domain.Entities;
 using CarCaseTest.Domain.Enums;
 using CarCaseTest.Domain.Extensions;
 using CarCaseTest.Domain.Models.Adverts;
+using CarCaseTest.Domain.Models.AdvertVisits;
 
 namespace CarCaseTest.Business.Mapping
 {
@@ -13,6 +14,7 @@ namespace CarCaseTest.Business.Mapping
         {
             CreateMap<Advert, AdvertDetailModel>().ReverseMap();
             CreateMap<AdvertListIndex, AdvertListModel>().ReverseMap();
+            CreateMap<AddAdvertVisitModel, AdvertVisitHistory>().ReverseMap();
             CreateMap<Advert, AdvertListIndex>()
                 .ForMember(x => x.FuelId, x => x.MapFrom(s => s.Fuel.ToEnumId()))
                 .ForMember(x => x.GearId, x => x.MapFrom(s => s.Gear.ToEnumId()))

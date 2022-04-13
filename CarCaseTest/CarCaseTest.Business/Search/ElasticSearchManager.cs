@@ -49,7 +49,7 @@ namespace CarCaseTest.Business.Search
             indexSettings.NumberOfShards = 1;
 
             var createIndexDescriptor = new CreateIndexDescriptor(this.IndexName)
-            .Mappings(ms => ms.Map<AdvertListIndex>(m => m.AutoMap()))
+            .Map<AdvertListIndex>(x => x.AutoMap())
             .InitializeUsing(new IndexState() { Settings = indexSettings });
 
             var response = this.ElasticClient.Indices.Create(createIndexDescriptor);
