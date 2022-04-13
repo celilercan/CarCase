@@ -4,20 +4,20 @@ This application contains a basic car advert list and detail endpoints. The app 
 
 You can run the application with the following command;
 ```
-	docker compose up
+docker compose up
 ```
 	
 ElasticSearch use default port 9200.
 
 RabbitMQ use default port 15672.
 
-RabbitMQ use default port 14333.
+SqlServer use default port 14333.
 
 If you want, you can change from <b>docker-compose-override.yml</b>.
 
 ## First you must create default data. Run the following endpoint; 
 ```
-	/api/data/seed
+/api/data/seed
 ```
 
 The enums for filter;
@@ -49,7 +49,7 @@ The enums for filter;
 
 Run the following endpoint for advert list;
 ```
-	/api/advert/all
+/api/advert/all
 ```
  
 Filtering Fields:  categoryId, price, gear, fuel, page
@@ -57,12 +57,12 @@ Sorting Fields: price, year, km
 
 Run the following endpoint for advert detail;
 ```
-	/api/advert/get/{id}
+/api/advert/get/{id}
 ```
 
 Run the following endpoint for advert visit record; 
 ```
-	/api/advert/visit
+/api/advert/visit
 ```
 
 Sample Request Body: 
@@ -74,5 +74,5 @@ Sample Request Body:
 
 For try api and for details;
 ```
-	/swagger/index.html
+/swagger/index.html
 ```
