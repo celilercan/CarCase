@@ -53,7 +53,7 @@ namespace CarCaseTest.Business.Services
         public async Task<ServiceResult<AdvertListResultModel>> SearchAsync(AdvertSearchFilterModel filter)
         {
             var result = new ServiceResult<AdvertListResultModel>();
-            var searchResponse = _elasticSearchManager.SearchAdvert(filter);
+            var searchResponse = await _elasticSearchManager.SearchAdvert(filter);
             result.Data = DtoMapper.Mapper.Map<AdvertListResultModel>(searchResponse);
             result.Data.Page = filter.Page.GetValueOrDefault();
             result.Status = searchResponse.Total > default(int) ? ResultStatus.Success : ResultStatus.NoContent;

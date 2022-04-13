@@ -6,6 +6,7 @@ using Nest;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace CarCaseTest.Business.Search
 {
@@ -101,14 +102,14 @@ namespace CarCaseTest.Business.Search
             return result.Source;
         }
 
-        public AdvertSearchResponse SearchAdvert(AdvertSearchFilterModel filter)
+        public async Task<AdvertSearchResponse> SearchAdvert(AdvertSearchFilterModel filter)
         {
             var searchRequest = new SearchRequest();
             var filters = new List<QueryContainer>();
             PreparePostFilters(filters, filter);
             var boolQuery = new BoolQuery { Filter = filters };
             var startPage = (filter.Page - 1) * filter.PageSize;
-            var result = this.ElasticClient.Search<AdvertListIndex>(x => x.From(startPage).Take(filter.PageSize).TrackTotalHits(true).PostFilter(x => boolQuery).Sort(GetSort(filter.SortType)));
+            var result = await this.ElasticClient.SearchAsync<AdvertListIndex>(x => x.From(startPage).Take(filter.PageSize).TrackTotalHits(true).PostFilter(x => boolQuery).Sort(GetSort(filter.SortType)));
             return new AdvertSearchResponse { Total = result.Total, Documents = result.Documents};
         }
 

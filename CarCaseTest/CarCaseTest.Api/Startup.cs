@@ -10,6 +10,8 @@ using CarCaseTest.Infrastructure.Repositories;
 using CarCaseTest.Business.Interfaces;
 using CarCaseTest.Business.Services;
 using CarCaseTest.Business.Search;
+using Microsoft.AspNetCore.Http;
+using System.Net;
 
 namespace CarCaseTest.Api
 {
@@ -38,10 +40,6 @@ namespace CarCaseTest.Api
             services.AddTransient<IAdvertVisitService, AdvertVisitService>();
             #endregion
 
-            //#region Consumers
-            //services.AddHostedService<AdvertVisitConsumer>();
-            //#endregion
-
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "CarCaseTest.Api", Version = "v1" });
@@ -58,15 +56,15 @@ namespace CarCaseTest.Api
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "CarCaseTest.Api v1"));
             }
 
-            //app.UseExceptionHandler(appError =>
-            //{
-            //    appError.Run(async context =>
-            //    {
-            //        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-            //        context.Response.ContentType = "application/json";
-            //        await context.Response.WriteAsync("Internal Server Error");
-            //    });
-            //});
+            app.UseExceptionHandler(appError =>
+            {
+                appError.Run(async context =>
+                {
+                    context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                    context.Response.ContentType = "application/json";
+                    await context.Response.WriteAsync("Internal Server Error");
+                });
+            });
 
             app.UseHttpsRedirection();
 
