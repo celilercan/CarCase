@@ -7,6 +7,7 @@ namespace CarCaseTest.Domain.Models.Adverts
         public AdvertSearchFilterModel()
         {
             this.Page = 1;
+            this.PageSize = 10;
         }
 
         public int? CategoryId { get; set; }
@@ -15,6 +16,7 @@ namespace CarCaseTest.Domain.Models.Adverts
         public GearType? Gear { get; set; }
         public FuelType? Fuel { get; set; }
         public int? Page { get; set; }
+        public int? PageSize { get; set; }
         public SortType? SortType { get; set; }
     }
 }

@@ -1,14 +1,11 @@
 ﻿using CarCaseTest.Business.Search.IndexModels;
 using CarCaseTest.Domain.Enums;
 using CarCaseTest.Domain.Models.Adverts;
-using Elasticsearch.Net;
 using Microsoft.Extensions.Configuration;
 using Nest;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CarCaseTest.Business.Search
 {
@@ -21,6 +18,11 @@ namespace CarCaseTest.Business.Search
         public ElasticSearchManager(IConfiguration configuration)
         {
             this.ServerUrls = configuration.GetConnectionString("ElasticSearch");
+        }
+
+        public ElasticSearchManager(string serverUrl)
+        {
+            this.ServerUrls = serverUrl;
         }
 
         public ElasticClient ElasticClient
@@ -103,21 +105,10 @@ namespace CarCaseTest.Business.Search
         {
             var searchRequest = new SearchRequest();
             var filters = new List<QueryContainer>();
-
-            searchRequest.From = filter.Page;
-            searchRequest.Size = 10;
-            searchRequest.Sort = GetSort2(filter.SortType);
-            searchRequest.TrackTotalHits = true;
-
             PreparePostFilters(filters, filter);
-
             var boolQuery = new BoolQuery { Filter = filters };
-            searchRequest.PostFilter = boolQuery;
-
-            var result = this.ElasticClient.Search<AdvertListIndex>(searchRequest);
-
-            var result2 = this.ElasticClient.Search<AdvertListIndex>(x => x.From(filter.Page).Take(10).TrackTotalHits(true).PostFilter(x => boolQuery).Sort(GetSort(filter.SortType)));
-
+            var startPage = (filter.Page - 1) * filter.PageSize;
+            var result = this.ElasticClient.Search<AdvertListIndex>(x => x.From(startPage).Take(filter.PageSize).TrackTotalHits(true).PostFilter(x => boolQuery).Sort(GetSort(filter.SortType)));
             return new AdvertSearchResponse { Total = result.Total, Documents = result.Documents};
         }
 
@@ -165,20 +156,6 @@ namespace CarCaseTest.Business.Search
                 SortType.YearAsc => new Func<SortDescriptor<AdvertListIndex>, IPromise<IList<ISort>>>(s => s.Ascending("year")),
                 SortType.YearDesc => new Func<SortDescriptor<AdvertListIndex>, IPromise<IList<ISort>>>(s => s.Descending("year")),
                 _ => new Func<SortDescriptor<AdvertListIndex>, IPromise<IList<ISort>>>(s => s.Descending("year")),
-            };
-        }
-
-        private IList<ISort> GetSort2(SortType? sortType)
-        {
-            return sortType switch
-            {
-                SortType.PriceAsc => new List<ISort> { new FieldSort { Field = "price", Order = SortOrder.Ascending } },
-                SortType.PriceDesc => new List<ISort> { new FieldSort { Field = "price", Order = SortOrder.Descending } },
-                SortType.KmAsc => new List<ISort> { new FieldSort { Field = "km", Order = SortOrder.Ascending } },
-                SortType.KmDesc => new List<ISort> { new FieldSort { Field = "km", Order = SortOrder.Descending } },
-                SortType.YearAsc => new List<ISort> { new FieldSort { Field = "year", Order = SortOrder.Ascending } },
-                SortType.YearDesc => new List<ISort> { new FieldSort { Field = "year", Order = SortOrder.Descending } },
-                _ => new List<ISort> { new FieldSort { Field = "year", Order = SortOrder.Descending } },
             };
         }
     }

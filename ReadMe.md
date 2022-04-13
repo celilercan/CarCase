@@ -1,6 +1,8 @@
 # Car Advert Case
 
-This application contains a basic car advert list and detail endpoints. The app is using .Net Core, ElasticSearch, RabbitMQ & SqlServer and running on docker.
+This application contains a basic car advert list and detail endpoints. The app is using .Net Core, Kibana, ElasticSearch, RabbitMQ & SqlServer and running on docker.
+
+Errors logging to kibana.
 
 You can run the application with the following command;
 ```
@@ -8,6 +10,8 @@ docker compose up
 ```
 	
 ElasticSearch use default port 9200.
+
+Kibana use default port 5601.
 
 RabbitMQ use default port 15672.
 

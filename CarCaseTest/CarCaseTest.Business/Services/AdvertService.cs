@@ -34,7 +34,7 @@ namespace CarCaseTest.Business.Services
             var entity = await _advertRepository.GetByIdAsync(id);
             if (entity == null)
             {
-                result.Status = ResultStatus.NotFound;
+                result.Status = ResultStatus.NoContent;
                 return result;
             }
 
