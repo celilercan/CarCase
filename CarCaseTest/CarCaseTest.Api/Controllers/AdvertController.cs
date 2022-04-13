@@ -44,9 +44,9 @@ namespace CarCaseTest.Api.Controllers
         [HttpPost("visit")]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
-        public async Task<IActionResult> Visit(int advertId)
+        public async Task<IActionResult> Visit([FromBody] AdvertVisitRequestModel model)
         {
-            var message = new AdvertVisitMessage { AdvertId = advertId, IPAddress = Request.HttpContext.Connection.RemoteIpAddress.ToString(), VisitDate = DateTime.Now };
+            var message = new AdvertVisitMessage { AdvertId = model.AdvertId, IPAddress = Request.HttpContext.Connection.RemoteIpAddress.ToString(), VisitDate = DateTime.Now };
             _ = Task.Run(() => _bus.Publish(message));
             return Created("advert/visit", "Visit created");
         }
