@@ -2,6 +2,7 @@
 using CarCaseTest.Domain.Models.AdvertVisits;
 using CarCaseTest.Queue.Events;
 using MassTransit;
+using System;
 using System.Threading.Tasks;
 
 namespace CarCaseTest.Queue.Consumers
@@ -25,7 +26,6 @@ namespace CarCaseTest.Queue.Consumers
             };
 
             _advertVisitService.AddVisit(advertVisit);
-
             return Task.CompletedTask;
         }
     }

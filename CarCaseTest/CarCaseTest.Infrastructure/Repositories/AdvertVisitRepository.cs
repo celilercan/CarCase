@@ -26,7 +26,7 @@ namespace CarCaseTest.Infrastructure.Repositories
             var sql = @"INSERT INTO AdvertVisitHistory (AdvertId, IPAddress, VisitDate) VALUES (@AdvertId, @IPAddress, @VisitDate)";
             using (var connection = new SqlConnection(_configuration.GetConnectionString("SqlServer")))
             {
-                connection.Open();
+                await connection.OpenAsync();
                 await connection.ExecuteAsync(sql, entity);
             }
         }
@@ -36,7 +36,7 @@ namespace CarCaseTest.Infrastructure.Repositories
             var sql = "DELETE FROM AdvertVisitHistory WHERE Id = @Id";
             using (var connection = new SqlConnection(_configuration.GetConnectionString("SqlServer")))
             {
-                connection.Open();
+                await connection.OpenAsync();
                 var result = await connection.ExecuteAsync(sql, new { Id = id });
                 return result > 0;
             }
@@ -47,7 +47,7 @@ namespace CarCaseTest.Infrastructure.Repositories
             var sql = "SELECT * FROM AdvertVisitHistory";
             using (var connection = new SqlConnection(_configuration.GetConnectionString("SqlServer")))
             {
-                connection.Open();
+                await connection.OpenAsync();
                 var result = await connection.QueryAsync<AdvertVisitHistory>(sql);
                 return result.ToList();
             }
@@ -58,7 +58,7 @@ namespace CarCaseTest.Infrastructure.Repositories
             var sql = "SELECT * FROM AdvertVisitHistory WHERE Id = @Id";
             using (var connection = new SqlConnection(_configuration.GetConnectionString("SqlServer")))
             {
-                connection.Open();
+                await connection.OpenAsync();
                 var result = await connection.QuerySingleOrDefaultAsync<AdvertVisitHistory>(sql, new { Id = id });
                 return result;
             }
@@ -69,7 +69,7 @@ namespace CarCaseTest.Infrastructure.Repositories
             var sql = @"UPDATE Advert SET AdvertId = @AdvertId, IPAddress = @IPAddress, VisitDate = @VisitDate WHERE Id = @Id";
             using (var connection = new SqlConnection(_configuration.GetConnectionString("SqlServer")))
             {
-                connection.Open();
+                await connection.OpenAsync();
                 await connection.ExecuteAsync(sql, entity);
             }
         }

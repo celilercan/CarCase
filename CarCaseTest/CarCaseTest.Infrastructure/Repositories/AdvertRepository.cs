@@ -29,7 +29,7 @@ namespace CarCaseTest.Infrastructure.Repositories
                                             @CategoryId, @Category, @Km, @Color, @Gear, @Fuel, @FirstPhoto, @SecondPhoto, @UserInfo, @UserPhone, @Text)";
             using (var connection = new SqlConnection(_configuration.GetConnectionString("SqlServer")))
             {
-                connection.Open();
+                await connection.OpenAsync();
                 await connection.ExecuteAsync(sql, entity);
             }
         }
@@ -39,7 +39,7 @@ namespace CarCaseTest.Infrastructure.Repositories
             var sql = "DELETE FROM Advert WHERE Id = @Id";
             using (var connection = new SqlConnection(_configuration.GetConnectionString("SqlServer")))
             {
-                connection.Open();
+                await connection.OpenAsync();
                 var result = await connection.ExecuteAsync(sql, new { Id = id });
                 return result > 0;
             }
@@ -50,7 +50,7 @@ namespace CarCaseTest.Infrastructure.Repositories
             var sql = "SELECT * FROM Advert WHERE Id = @Id";
             using (var connection = new SqlConnection(_configuration.GetConnectionString("SqlServer")))
             {
-                connection.Open();
+                await connection.OpenAsync();
                 var result = await connection.QuerySingleOrDefaultAsync<Advert>(sql, new { Id = id });
                 return result;
             }
@@ -61,7 +61,7 @@ namespace CarCaseTest.Infrastructure.Repositories
             var sql = "SELECT * FROM Advert";
             using (var connection = new SqlConnection(_configuration.GetConnectionString("SqlServer")))
             {
-                connection.Open();
+                await connection.OpenAsync();
                 var result = await connection.QueryAsync<Advert>(sql);
                 return result.ToList();
             }
@@ -74,7 +74,7 @@ namespace CarCaseTest.Infrastructure.Repositories
                                             Fuel = @Fuel, FirstPhoto = @FirstPhoto, SecondPhoto = @SecondPhoto, UserInfo = @UserInfo, UserPhone = @UserPhone, [Text] = @Text WHERE Id = @Id";
             using (var connection = new SqlConnection(_configuration.GetConnectionString("SqlServer")))
             {
-                connection.Open();
+                await connection.OpenAsync();
                 await connection.ExecuteAsync(sql, entity);
             }
         }

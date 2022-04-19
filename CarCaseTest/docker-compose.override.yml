@@ -10,8 +10,6 @@ services:
       SA_PASSWORD: "P12345_**"
       ACCEPT_EULA: "Y"
       MSSQL_PID: "Express"
-    networks:
-      - carcase
   elasticsearch:
     container_name: elasticsearch
     restart: always
@@ -22,8 +20,6 @@ services:
       - elasticsearch-data:/usr/share/elasticsearch/data
     environment:
       - discovery.type=single-node
-    networks:
-      - carcase
   kibana:
     container_name: kibana
     restart: always
@@ -34,8 +30,6 @@ services:
     environment:
       - ELASTICSEARCH_URL=http://elasticsearch:9200
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-    networks:
-      - carcase
   rabbitmq:
     container_name: rabbitmq
     restart: always
@@ -45,28 +39,18 @@ services:
     environment:
       - RABBITMQ_DEFAULT_USER=admin
       - RABBITMQ_DEFAULT_PASS=123456
-    networks:
-      - carcase
   carcasetest.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+:443;http://+:80
     depends_on:
       - sqldb
       - elasticsearch
       - rabbitmq
     ports:
       - "80"
-      - "443"
-    networks:
-      - carcase
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
-
-networks:
-  carcase:
-    driver: bridge
 
 volumes:
   elasticsearch-data:

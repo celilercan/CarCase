@@ -47,7 +47,7 @@ namespace CarCaseTest.Api.Controllers
         public async Task<IActionResult> Visit([FromBody] AdvertVisitRequestModel model)
         {
             var message = new AdvertVisitMessage { AdvertId = model.AdvertId, IPAddress = Request.HttpContext.Connection.RemoteIpAddress.ToString(), VisitDate = DateTime.Now };
-            _ = Task.Run(() => _bus.Publish(message));
+            await _bus.Publish(message);
             return Created("advert/visit", "Visit created");
         }
     }
